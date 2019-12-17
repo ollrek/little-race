@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Row, Col, Select, Input, Button, Form, message } from 'antd';
+import getSlug from 'speakingurl';
+import { FirebaseContext } from '../Firebase';
+import { withRouter } from "react-router";
 
 import EU from './data/realms_EU.json';
 import US from './data/realms_US.json';
 
 const { Option } = Select;
-// const InputGroup = Input.Group;
 
 const realmSource = {
     eu: EU.realms,
@@ -13,10 +15,21 @@ const realmSource = {
 };
 
 class StartingBlock extends Component {
+    render() {
+        const { history } = this.props;
+        return (
+            <FirebaseContext.Consumer>
+                {(firebase) => <StartingBlockContent firebase={firebase} history={history} />}
+            </FirebaseContext.Consumer>
+        )
+    }
+}
+
+class StartingBlockContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            origin: '',
+            region: '',
             realm: '',
             guild: '',
             realmOptions: [],
@@ -26,7 +39,7 @@ class StartingBlock extends Component {
     }
 
     handleSelectChange = (name, value) => {
-        if (name === 'origin') {
+        if (name === 'region') {
             this.setState({
                 realmOptions: realmSource[value]
             });
@@ -46,13 +59,61 @@ class StartingBlock extends Component {
         });
     };
 
-    onSubmit = e => {
+    onSubmit = async e => {
         e.preventDefault();
-        const { origin, realm, guild } = this.state;
-        if (origin && realm && guild)
-            message.success(origin + '-' + realm + ' ' + guild);
+        const { region, realm, guild } = this.state;
+
+        // If form valid
+        if (region && realm && guild) {
+            this.setState({ loading: true });
+
+            // Slugify
+            const slug = getSlug(region + ' ' + realm + ' ' + guild + ' ');
+
+            // Check if exists in our DB, if yes redirect
+            var id = await this.props.firebase.guilds().where('slug', '==', slug).get().then(
+                (snapshot) => {
+                    if (!snapshot.empty) {
+                        return snapshot.docs[0].data().slug;
+                    }
+                    else return ''
+                });
+
+            // Check rio for guild existence if not found in our data
+            if (!id) {
+                var url = new URL('https://raider.io/api/v1/guilds/profile');
+                url.search = new URLSearchParams({ region: region, realm: realm, name: guild });
+
+                const guildFound = await fetch(url.toString())
+                    .then(response => response.json())
+                    .then((data) => {
+                        if (data.error) throw new Error(data.message);
+                        else return true;
+                    })
+                    .catch((e) => {
+                        message.error(e.message ? e.message : 'Error encoutered. Please try again.')
+                        return false;
+                    })
+
+                // Create guild in our data
+                if (guildFound) {
+                    id = await this.props.firebase.guilds().add({
+                        region: region,
+                        realm: realm,
+                        name: guild,
+                        slug: slug
+                    }).then((res) => { return res.id });
+                }
+            }
+            if (id) {
+                message.success('Redirecting to guild page', 1).then(() => {
+                    this.props.history.push("/guild/" + id); return;
+                });
+            } else
+                this.setState({ loading: false });
+        }
         else
-            message.error('This is an error message');
+            message.error('All fields are required');
     };
 
     renderTitle = title => {
@@ -64,7 +125,7 @@ class StartingBlock extends Component {
     }
 
     render() {
-        const { origin, realm, guild, loading, realmOptions } = this.state;
+        const { region, realm, guild, loading, realmOptions } = this.state;
 
         return (
             <div className="Home">
@@ -79,9 +140,9 @@ class StartingBlock extends Component {
                             <Row type="flex" justify="center" gutter={[8, 100]} >
                                 <Col>
                                     <Select
-                                        onChange={(value) => this.handleSelectChange('origin', value)}
+                                        onChange={(value) => this.handleSelectChange('region', value)}
                                         style={{ width: '90px' }}
-                                        placeholder="Origin"
+                                        placeholder="Region"
                                     >
                                         <Option value="eu">EU</Option>
                                         <Option value="us">US</Option>
@@ -116,7 +177,7 @@ class StartingBlock extends Component {
                                 <Col>
                                     <Form.Item>
                                         <Button
-                                            disabled={!(realm && guild && origin)}
+                                            disabled={!(realm && guild && region)}
                                             htmlType="submit"
                                             loading={loading}
                                         >Track guild</Button>
@@ -131,4 +192,4 @@ class StartingBlock extends Component {
     }
 }
 
-export default StartingBlock;
+export default withRouter(StartingBlock);

@@ -19,6 +19,9 @@ class Firebase {
     // *** User API ***
     // user = uid => this.db.ref(`users/${uid}`);
     users = () => this.db.collection("users");
+
+    // *** Guild API ***
+    guilds = () => this.db.collection("guilds");
     
 }
 
