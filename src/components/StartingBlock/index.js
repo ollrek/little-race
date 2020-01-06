@@ -81,6 +81,7 @@ class StartingBlockContent extends Component {
 
             // Check rio for guild existence if not found in our data
             if (!id) {
+                var faction = "";
                 var url = new URL('https://raider.io/api/v1/guilds/profile');
                 url.search = new URLSearchParams({ region: region, realm: realm, name: guild });
 
@@ -88,7 +89,10 @@ class StartingBlockContent extends Component {
                     .then(response => response.json())
                     .then((data) => {
                         if (data.error) throw new Error(data.message);
-                        else return true;
+                        else {
+                            faction = data.faction;
+                            return true;
+                        };
                     })
                     .catch((e) => {
                         message.error(e.message ? e.message : 'Error encoutered. Please try again.')
@@ -97,12 +101,14 @@ class StartingBlockContent extends Component {
 
                 // Create guild in our data
                 if (guildFound) {
-                    id = await this.props.firebase.guilds().add({
+                    await this.props.firebase.guilds().add({
                         region: region,
                         realm: realm,
                         name: guild,
-                        slug: slug
-                    }).then((res) => { return res.id });
+                        slug: slug,
+                        faction: faction
+                    });
+                    id = slug;
                 }
             }
             if (id) {
