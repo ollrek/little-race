@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import { Layout } from 'antd';
 import './app.css';
 
@@ -23,12 +23,16 @@ class App extends Component {
                         >
                             <HeaderCustom />
                         </Header>
-                        <Content style={{ minHeight: '800px' }}>
-                            <Route exact path={ROUTES.HOME} component={HomePage} />
-                            <Route path={ROUTES.GUILD} component={GuildPage} />
-                            <Route path={ROUTES.LEAGUE} component={LeaguePage} />
+                        <Content style={{ minHeight: '600px' }}>
+                            <Switch>
+                                <Route exact path={ROUTES.HOME} component={HomePage} />
+                                <Route path={ROUTES.GUILD} component={GuildPage} />
+                                <Route path={ROUTES.LEAGUE} component={LeaguePage} />
+                                <Route path={ROUTES.AOA} />
+                                <Redirect to={ROUTES.AOA} />
+                            </Switch>
                         </Content>
-                        <Footer style={{ textAlign: 'center' }}>Little Race ©2019 Created by Lucas Jourdes</Footer>
+                        <Footer style={{ textAlign: 'center' }}>{"Little Race ©2020 Created by <Ironforge Gospel>"}</Footer>
                     </Layout>
                 </div>
             </Router>

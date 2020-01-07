@@ -22,6 +22,9 @@ class Firebase {
 
     // *** Guild API ***
     guilds = () => this.db.collection("guilds");
+
+    // *** Progress API ***
+    progress = () => this.db.collection("progress");
     
 }
 

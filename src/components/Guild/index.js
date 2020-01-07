@@ -5,6 +5,8 @@ import { Skeleton, Row, Col, Avatar, Divider } from 'antd';
 
 const GuildContent = (props) => {
     console.log(props);
+    if(Object.keys(props).length === 0 && props.constructor === Object) return "";
+    
     props.raid_rankings = (({ "nyalotha-the-waking-city":n, "the-eternal-palace":ep}) => ({"nyalotha-the-waking-city":n, "the-eternal-palace":ep}))(props.raid_rankings);
 
     return (

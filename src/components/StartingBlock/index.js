@@ -134,7 +134,7 @@ class StartingBlockContent extends Component {
         const { region, realm, guild, loading, realmOptions } = this.state;
 
         return (
-            <div className="Home">
+            <div className="StartingBlock">
                 <Form onSubmit={this.onSubmit}>
                     <Row type="flex" align="middle" style={{ height: '300px', background: `bottom / cover no-repeat url(/banners/get_started_crusader.jpg)` }}>
                         <Col span={24}>
