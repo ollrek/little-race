@@ -140,7 +140,7 @@ class StartingBlockContent extends Component {
                         <Col span={24}>
                             <Row type="flex" justify="center" gutter={[0, 100]}>
                                 <Col style={{ color: 'white', fontSize: '30px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
-                                    Get your guild started
+                                    Manage your guild
                             </Col>
                             </Row>
                             <Row type="flex" justify="center" gutter={[8, 100]} >

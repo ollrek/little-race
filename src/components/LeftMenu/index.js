@@ -10,8 +10,8 @@ class LeftMenu extends Component {
     return (
       <Menu mode={this.props.mode}>
         <Menu.Item key="1"><Link to={ROUTES.HOME}>Home</Link></Menu.Item>
-        <Menu.Item key="2"><Link to={ROUTES.GUILD}>Guild</Link></Menu.Item>
-        <Menu.Item key="3"><Link to={ROUTES.LEAGUE}>League</Link></Menu.Item>
+        {/* <Menu.Item key="2"><Link to={ROUTES.GUILD}>Guild</Link></Menu.Item>
+        <Menu.Item key="3"><Link to={ROUTES.LEAGUE}>League</Link></Menu.Item> */}
         <Menu.Item>
           <Link to={ROUTES.HOME}>Log In</Link>
         </Menu.Item>

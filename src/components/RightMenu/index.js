@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { Input, Menu } from 'antd';
-const { Search } = Input;
+import { Menu } from 'antd';
+// import { Input, Menu } from 'antd';
+// const { Search } = Input;
 
 class RightMenu extends Component {
   render() {
     return (
       <Menu mode={this.props.mode}>
-        <Search
+        {/* <Search
           placeholder="Search a guild ..."
           onClick={e => e.preventDefault}
           onSearch={value => console.log(value)}
-        />
+        /> */}
       </Menu>
     );
   }

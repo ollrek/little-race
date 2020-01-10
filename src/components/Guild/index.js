@@ -1,40 +1,57 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FirebaseContext } from '../Firebase';
 import { Skeleton, Row, Col, Avatar, Divider } from 'antd';
-
+import Progress from '../Progress';
 
 const GuildContent = (props) => {
     console.log(props);
-    if(Object.keys(props).length === 0 && props.constructor === Object) return "";
-    
-    props.raid_rankings = (({ "nyalotha-the-waking-city":n, "the-eternal-palace":ep}) => ({"nyalotha-the-waking-city":n, "the-eternal-palace":ep}))(props.raid_rankings);
+    if (Object.keys(props).length === 0 && props.constructor === Object) return "";
 
     return (
         <div className="guildContent">
             <Row type="flex" justify="center" align="middle" gutter={[16, 0]}>
                 <Col style={{ fontWeight: 'bolder', fontSize: '30px' }}>
-                    {props.name}
+                    {props.guildData.name}
                 </Col>
                 <Col>
-                    <Avatar src={`/icons/icon_${props.faction}.png`}></Avatar>
+                    <Avatar src={`/icons/icon_${props.guildData.faction}.png`}></Avatar>
                 </Col>
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col style={{ textTransform: 'uppercase' }}>
-                    <span style={{ textTransform: 'uppercase' }}>{props.region} - </span><span style={{ textTransform: 'capitalize' }}>{props.realm}</span>
+                    <span style={{ textTransform: 'uppercase' }}>{props.guildData.region} - </span><span style={{ textTransform: 'capitalize' }}>{props.guildData.realm}</span>
                 </Col>
             </Row>
-            <Row type="flex" justify="center">
-                <a target="_blank" rel="noopener noreferrer" href={`//raider.io/guilds/${props.region}/${props.realm}/${props.name}`}>
-                    <Avatar src={`/icons/raiderio.png`}></Avatar>
+            <Row type="flex" justify="center" style={{ marginTop: '12px' }}>
+                <a target="_blank" rel="noopener noreferrer" href={`//raider.io/guilds/${props.guildData.region}/${props.guildData.realm}/${props.guildData.name}`}>
+                    <Avatar src={`/icons/raiderio.webp`}></Avatar>
                 </a>
             </Row>
             <Divider style={{ marginTop: '42px' }}>Progress</Divider>
-            <Row type="flex" justify="center">
-                <pre>
-                    {JSON.stringify(props.raid_rankings, null, 2)}
-                </pre>
-            </Row>
+            {props.progressData.map((o) => (
+                <div id={o.slug + "-progress"}>
+                    <Progress data={o} key={o.status} type="guild" />
+                    {o.status && o.status === 2 ? ''
+                        :
+                        <Row type="flex" justify="center" style={{ marginTop: '32px', marginBottom: '32px' }}>
+                            <Col>
+                                <Row type="flex" justify="center" align="middle" style={{ fontSize: '24px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
+                                    Heroic {props.guildData.raid_progression[o.slug].heroic_bosses_killed + " / " + props.guildData.raid_progression[o.slug].total_bosses}
+                                </Row>
+                                <Row type="flex" justify="center" style={{ marginTop: '16px' }} gutter={16}>
+                                    {[...Array(props.guildData.raid_progression[o.slug].total_bosses - 1)].map((x, i) =>
+                                        <Col key={i + 1}>
+                                            <img alt="" src={"/raid/" + o.slug + "/boss" + (i + 1) + ".webp"}
+                                                style={{ borderRadius: ".25rem", WebkitFilter: props.guildData.raid_progression[o.slug].heroic_bosses_killed >= i + 1 ? "none" : "grayscale(1)" }} />
+                                        </Col>
+                                    )}
+                                </Row>
+                            </Col>
+                        </Row>
+                    }
+                </div>
+            )
+            )}
         </div>
     )
 }
@@ -42,19 +59,30 @@ const GuildContent = (props) => {
 const Guild = (props) => {
     const firebase = useContext(FirebaseContext);
     const [guildData, setGuildData] = useState({})
+    const [progressData, setProgressData] = useState({})
     const [didMount, setDidMount] = useState(false)
 
     // Fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const result = await firebase.guilds().where('slug', '==', props.match.params.slug).get().then(
+            const gData = await firebase.guilds().where('slug', '==', props.match.params.slug).get().then(
                 (snapshot) => {
                     if (!snapshot.empty) {
                         return snapshot.docs[0].data();
                     }
                     else return {};
                 });
-            setGuildData(result);
+            setGuildData(gData);
+
+            const pData = await firebase.progress().get().then(
+                (snapshot) => {
+                    if (!snapshot.empty) {
+                        return snapshot.docs;
+                    }
+                    else return;
+                });
+            setProgressData(pData.map(progress => progress.data()));
+
             setDidMount(true);
         }
 
@@ -73,7 +101,7 @@ const Guild = (props) => {
 
     var content;
     if (didMount) {
-        content = GuildContent(guildData)
+        content = GuildContent({ guildData: guildData, progressData: progressData })
     } else {
         content = <Skeleton active />
     }

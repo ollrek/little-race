@@ -7,7 +7,6 @@ import { FirebaseContext } from '../Firebase';
 const Home = () => {
     const firebase = useContext(FirebaseContext);
     const [progressData, setProgressData] = useState([])
-    // const [didMount, setDidMount] = useState(false)
 
     // Fetch data
     useEffect(() => {

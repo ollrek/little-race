@@ -5,6 +5,9 @@ import { Drawer, Button, Icon } from 'antd';
 import * as Styled from './styled';
 import './Header.css';
 
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../../constants/routes';
+
 class Header extends Component {
     state = {
         visible: false
@@ -25,7 +28,7 @@ class Header extends Component {
     render() {
         return (
             <nav className="menu">
-                <Styled.Logo />
+                <Link to={ROUTES.HOME}><Styled.Logo /></Link>
                 <div className="menu__container">
                     <div className="menu_left">
                         <LeftMenu mode="horizontal" />
