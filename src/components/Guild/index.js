@@ -1,11 +1,26 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FirebaseContext } from '../Firebase';
-import { Skeleton, Row, Col, Avatar, Divider } from 'antd';
+import { Skeleton, Icon, Row, Col, Avatar, Divider, Form, Select, Collapse, Button } from 'antd';
 import Progress from '../Progress';
+import { RAID_SIZE, RAID_MODE, RAID_TIME } from '../../constants/objectives';
+
+const { Option } = Select;
+const { Panel } = Collapse;
+
+
 
 const GuildContent = (props) => {
+    const [modeData, setModeData] = useState('')
+    const [sizeData, setSizeData] = useState('')
+    const [timeData, setTimeData] = useState('')
+
     console.log(props);
     if (Object.keys(props).length === 0 && props.constructor === Object) return "";
+
+    const onSubmit = async e => {
+        e.preventDefault();
+        console.log('submit')
+    }
 
     return (
         <div className="guildContent">
@@ -29,17 +44,92 @@ const GuildContent = (props) => {
             </Row>
             <Divider style={{ marginTop: '42px' }}>Progress</Divider>
             {props.progressData.map((o) => (
-                <div id={o.slug + "-progress"}>
+                <div key={o.slug} id={o.slug + "-progress"}>
                     <Progress data={o} key={o.status} type="guild" />
-                    {o.status && o.status === 2 ? ''
+                    {o.status && o.status === 2 ?
+                        <Collapse style={{ borderRadius: '0px' }}>
+                            <Panel
+                                header={
+                                    <Row type="flex" justify="center" align="middle" gutter={20}>
+                                        <Col style={{ fontSize: '18px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
+                                            Registered
+                                        </Col>
+                                        <Col style={{ fontSize: '24px' }}>
+                                            <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
+                                            <Icon type="close-circle" theme="twoTone" twoToneColor="red" />
+                                        </Col>
+                                    </Row>
+                                }>
+                                <Row type="flex" justify="center" style={{ marginTop: '32px', marginBottom: '32px' }}>
+                                    <Col xs={{ span: 24 }} sm={{ span: 12 }}>
+                                        <Form onSubmit={onSubmit}>
+                                            <Form.Item>
+                                                <Select
+                                                    style={{ textTransform: 'capitalize' }}
+                                                    placeholder="Raid difficulty"
+                                                    onChange={(value) => setModeData(value)}
+                                                >
+                                                    {
+                                                        Object.keys(RAID_MODE).map((key) =>
+                                                            <Option
+                                                                disabled={sizeData && !(sizeData === 'm') && key === 'mm' ? true : false}
+                                                                style={{ textTransform: 'capitalize' }} key={key}>{RAID_MODE[key]}
+                                                            </Option>
+                                                        )
+                                                    }
+                                                </Select>
+                                            </Form.Item>
+                                            <Form.Item>
+                                                <Select
+                                                    style={{ textTransform: 'capitalize' }}
+                                                    placeholder="Avg. raid size"
+                                                    onChange={(value) => setSizeData(value)}
+                                                >
+                                                    {
+                                                        Object.keys(RAID_SIZE).map((key) =>
+                                                            <Option disabled={modeData && modeData === 'mm' && !(key === 'm') ? true : false}
+                                                                style={{ textTransform: 'capitalize' }} key={key}>{RAID_SIZE[key].name + ' (' + RAID_SIZE[key].min + '-' + RAID_SIZE[key].max + ')'}
+                                                            </Option>
+                                                        )
+                                                    }
+                                                </Select>
+                                            </Form.Item>
+                                            <Form.Item>
+                                                <Select
+                                                    style={{ textTransform: 'capitalize' }}
+                                                    placeholder="Avg. raid time per week"
+                                                    onChange={(value) => setTimeData(value)}
+                                                >
+                                                    {
+                                                        Object.keys(RAID_TIME).map((key) =>
+                                                            <Option style={{ textTransform: 'capitalize' }} key={key}>{RAID_TIME[key]}</Option>
+                                                        )
+                                                    }
+                                                </Select>
+                                            </Form.Item>
+                                            <Form.Item>
+                                                <Row type="flex" justify="center">
+                                                    <Col>
+                                                        <Button
+                                                            disabled={!(timeData && modeData && sizeData)}
+                                                            htmlType="submit"
+                                                        >Update objective</Button>
+                                                    </Col>
+                                                </Row>
+                                            </Form.Item>
+                                        </Form>
+                                    </Col>
+                                </Row>
+                            </Panel>
+                        </Collapse>
                         :
                         <Row type="flex" justify="center" style={{ marginTop: '32px', marginBottom: '32px' }}>
                             <Col>
                                 <Row type="flex" justify="center" align="middle" style={{ fontSize: '24px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
-                                    Heroic {props.guildData.raid_progression[o.slug].heroic_bosses_killed + " / " + props.guildData.raid_progression[o.slug].total_bosses}
+                                    {props.guildData.raid_progression[o.slug].summary}
                                 </Row>
-                                <Row type="flex" justify="center" style={{ marginTop: '16px' }} gutter={16}>
-                                    {[...Array(props.guildData.raid_progression[o.slug].total_bosses - 1)].map((x, i) =>
+                                <Row type="flex" justify="center" style={{ marginTop: '16px' }} gutter={[16, 16]}>
+                                    {[...Array(props.guildData.raid_progression[o.slug].total_bosses)].map((x, i) =>
                                         <Col key={i + 1}>
                                             <img alt="" src={"/raid/" + o.slug + "/boss" + (i + 1) + ".webp"}
                                                 style={{ borderRadius: ".25rem", WebkitFilter: props.guildData.raid_progression[o.slug].heroic_bosses_killed >= i + 1 ? "none" : "grayscale(1)" }} />
@@ -81,7 +171,9 @@ const Guild = (props) => {
                     }
                     else return;
                 });
-            setProgressData(pData.map(progress => progress.data()));
+            setProgressData(pData.map(progress => progress.data()).sort(function (a, b) {
+                return b.status - a.status;
+            }));
 
             setDidMount(true);
         }
@@ -101,7 +193,7 @@ const Guild = (props) => {
 
     var content;
     if (didMount) {
-        content = GuildContent({ guildData: guildData, progressData: progressData })
+        content = <GuildContent guildData={guildData} progressData={progressData} />
     } else {
         content = <Skeleton active />
     }
