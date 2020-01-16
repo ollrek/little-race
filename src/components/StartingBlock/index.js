@@ -143,7 +143,7 @@ class StartingBlockContent extends Component {
                                     Manage your guild
                             </Col>
                             </Row>
-                            <Row type="flex" justify="center" gutter={[8, 100]} >
+                            <Row type="flex" justify="center" gutter={[8, 50]} >
                                 <Col>
                                     <Select
                                         onChange={(value) => this.handleSelectChange('region', value)}

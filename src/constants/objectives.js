@@ -1,35 +1,35 @@
 export const RAID_SIZE = {
-    xs: {
+    1: {
         name: 'extra small',
         min: 10,
         max: 13
     },
-    s: {
+    2: {
         name: 'small',
         min: 14,
         max: 18
     }, 
-    m: {
+    3: {
         name: 'medium',
         min: 19,
         max: 24
     }, 
-    l: {
+    4: {
         name: 'large',
         min: 25,
         max: 30
     },
 };
 export const RAID_MODE = {
-    nm: 'normal',
-    hm: 'heroic',
-    mm: 'mythic',
+    1: 'normal',
+    2: 'heroic',
+    3: 'mythic',
 };
 export const RAID_TIME = {
-    xs: '1 day',
-    s: '2 days',
-    m: '3 days',
-    l: '4 days',
-    xl: '5+ days',
-    xxl: 'day-raiding',
+    1: '1 day',
+    2: '2 days',
+    3: '3 days',
+    4: '4 days',
+    5: '5+ days',
+    6: 'day-raiding',
 };

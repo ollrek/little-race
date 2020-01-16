@@ -30,7 +30,7 @@ const Progress = (props) => {
                     {/* Progress text */}
                     <Row type="flex" justify="center" gutter={[0, 100]}>
                         <Col style={{ color: 'white', fontSize: '30px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
-                            <img alt="" src={"/raid/" + data.slug + "/text.png"} />
+                            <img style={{width: '100%'}} alt="" src={"/raid/" + data.slug + "/text.png"} />
                         </Col>
                     </Row>
                     {/* Footer */}
