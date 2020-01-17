@@ -23,10 +23,22 @@ const GuildContent = (props) => {
                     <span style={{ textTransform: 'uppercase' }}>{props.guildData.region} - </span><span style={{ textTransform: 'capitalize' }}>{props.guildData.realm}</span>
                 </Col>
             </Row>
-            <Row type="flex" justify="center" style={{ marginTop: '12px' }}>
-                <a target="_blank" rel="noopener noreferrer" href={`//raider.io/guilds/${props.guildData.region}/${props.guildData.realm}/${props.guildData.name}`}>
-                    <Avatar src={`/icons/raiderio.webp`}></Avatar>
-                </a>
+            <Row type="flex" justify="center" style={{ marginTop: '12px' }} gutter={[12,0]}>
+                <Col>
+                    <a target="_blank" rel="noopener noreferrer" href={`//raider.io/guilds/${props.guildData.region}/${props.guildData.realm}/${props.guildData.name}`}>
+                        <Avatar src={`/icons/raiderio.webp`}></Avatar>
+                    </a>
+                </Col>
+                <Col>
+                    <a target="_blank" rel="noopener noreferrer" href={`https://worldofwarcraft.com/en-gb/guild/${props.guildData.slug.replace(/([^-]*)-([^-]*)-([^-]*)/g, '$1/$2/$3')}`}>
+                        <Avatar src={`/icons/wow-icon.png`}></Avatar>
+                    </a>
+                </Col>
+                <Col>
+                    <a target="_blank" rel="noopener noreferrer" href={`https://www.warcraftlogs.com/guild/${props.guildData.region}/${props.guildData.realm}/${props.guildData.name}`}>
+                        <Avatar src={`/icons/warcraftlogs-icon.png`}></Avatar>
+                    </a>
+                </Col>
             </Row>
             <Divider style={{ marginTop: '42px' }}>Progress</Divider>
             {props.progressData.map((o) => (
