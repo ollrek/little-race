@@ -32,7 +32,7 @@ const GuildContent = (props) => {
                         <Objective
                             guild={props.guildData.key}
                             progress={o}
-                            objective={props.guildData.leagues && props.guildData.raid_objectives[o.slug]}
+                            objective={props.guildData.raid_objectives && props.guildData.raid_objectives[o.slug]}
                             league={props.guildData.leagues && props.guildData.leagues[o.slug]}
                         />
                         {o.status && o.status < 2 && props.guildData.raid_objectives && props.guildData.raid_objectives[o.slug] ?
