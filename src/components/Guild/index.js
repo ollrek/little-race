@@ -35,9 +35,9 @@ const GuildContent = (props) => {
                             objective={props.guildData.leagues && props.guildData.raid_objectives[o.slug]}
                             league={props.guildData.leagues && props.guildData.leagues[o.slug]}
                         />
-                        {o.status && o.status < 2 ?
+                        {o.status && o.status < 2 && props.guildData.raid_objectives && props.guildData.raid_objectives[o.slug] ?
                             <ProgressKills guild={props.guildData} progress={o.slug} />
-                            : ''}
+                        : ''}
                     </div>
                     : ''
             )
