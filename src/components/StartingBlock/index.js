@@ -138,7 +138,7 @@ class StartingBlockContent extends Component {
         return (
             <div className="StartingBlock">
                 <Form onSubmit={this.onSubmit}>
-                    <Row type="flex" align="middle" style={{ height: '300px', background: `bottom / cover no-repeat url(/banners/get_started_crusader.jpg)` }}>
+                    <Row type="flex" align="middle" style={{ height: '300px', background: `bottom / cover no-repeat url(/gs.jpg)` }}>
                         <Col span={24}>
                             <Row type="flex" justify="center" gutter={[0, 100]}>
                                 <Col style={{ color: 'white', fontSize: '30px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
