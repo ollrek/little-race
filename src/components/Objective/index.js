@@ -1,22 +1,27 @@
 import React, { useContext, useState } from 'react';
 import { FirebaseContext } from '../Firebase';
 import { Icon, Row, Col, Form, Select, Collapse, Button, message } from 'antd';
+
 import { RAID_SIZE, RAID_MODE, RAID_TIME } from '../../constants/objectives';
+
+import { Link } from 'react-router-dom';
 
 const { Option } = Select;
 const { Panel } = Collapse;
 
 const Objective = (props) => {
     const firebase = useContext(FirebaseContext);
-    console.log(props);
 
     const { slug, status } = props.progress;
     const { guild } = props;
 
     const [objective, setObjective] = useState(props.objective)
+    // const [leagueData, setLeagueData] = useState({})
+
     const [modeData, setModeData] = useState((objective && objective.modeData) || undefined)
     const [sizeData, setSizeData] = useState((objective && objective.sizeData) || undefined)
     const [timeData, setTimeData] = useState((objective && objective.timeData) || undefined)
+
     const [loading, setLoading] = useState(false);
 
     const onSubmit = e => {
@@ -31,6 +36,7 @@ const Objective = (props) => {
             };
 
             firebase.guilds().doc(guild).update({
+                tag: true,
                 ["raid_objectives." + slug]: newObjective
             }).then(() => {
                 setObjective(newObjective);
@@ -139,6 +145,11 @@ const Objective = (props) => {
                         {RAID_MODE[modeData] + ' - '}
                         {RAID_SIZE[sizeData].name + ' (' + RAID_SIZE[sizeData].min + '-' + RAID_SIZE[sizeData].max + ')'}
                         {' - ' + RAID_TIME[timeData]}
+                        {objective.league && objective.league.slug ?
+                            <Row type="flex" justify="center" >
+                                <Link to={`/league/${slug}/${objective.league.slug}`}>League {objective.league.name}</Link>
+                            </Row>
+                            : ''}
                     </Col>
                 </Row>
             }

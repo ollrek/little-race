@@ -12,7 +12,6 @@ const config = {
 class Firebase {
     constructor() {
         app.initializeApp(config);
-
         this.db = app.firestore();
     }
 
@@ -25,7 +24,13 @@ class Firebase {
 
     // *** Progress API ***
     progress = () => this.db.collection("progress");
-    
+
+    // *** Stats API ***
+    stats = () => this.db.collection("stats");
+
+    // *** Leagues API ***
+    leagues = (progress, slug) => this.db.collection("leagues").doc(progress).collection("objective");
+
 }
 
 export default Firebase;

@@ -3,9 +3,9 @@ import { FirebaseContext } from '../Firebase';
 import { Skeleton, Row, Col, Avatar, Divider } from 'antd';
 import Progress from '../Progress';
 import Objective from '../Objective';
+import { GuildLinks, ProgressKills } from '../../helpers/helpers'
 
 const GuildContent = (props) => {
-    console.log(props);
     if (Object.keys(props).length === 0 && props.constructor === Object) return "";
 
     return (
@@ -19,52 +19,24 @@ const GuildContent = (props) => {
                 </Col>
             </Row>
             <Row type="flex" justify="center" align="middle">
-                <Col style={{ textTransform: 'uppercase' }}>
+                <Col>
                     <span style={{ textTransform: 'uppercase' }}>{props.guildData.region} - </span><span style={{ textTransform: 'capitalize' }}>{props.guildData.realm}</span>
                 </Col>
             </Row>
-            <Row type="flex" justify="center" style={{ marginTop: '12px' }} gutter={[12,0]}>
-                <Col>
-                    <a target="_blank" rel="noopener noreferrer" href={`//raider.io/guilds/${props.guildData.region}/${props.guildData.realm}/${props.guildData.name}`}>
-                        <Avatar src={`/icons/raiderio.webp`}></Avatar>
-                    </a>
-                </Col>
-                <Col>
-                    <a target="_blank" rel="noopener noreferrer" href={`https://worldofwarcraft.com/en-gb/guild/${props.guildData.slug.replace(/([^-]*)-([^-]*)-([^-]*)/g, '$1/$2/$3')}`}>
-                        <Avatar src={`/icons/wow-icon.png`}></Avatar>
-                    </a>
-                </Col>
-                <Col>
-                    <a target="_blank" rel="noopener noreferrer" href={`https://www.warcraftlogs.com/guild/${props.guildData.region}/${props.guildData.realm}/${props.guildData.name}`}>
-                        <Avatar src={`/icons/warcraftlogs-icon.png`}></Avatar>
-                    </a>
-                </Col>
-            </Row>
+            <GuildLinks guild={props.guildData} style={{ marginTop: '12px' }} />
             <Divider style={{ marginTop: '42px' }}>Progress</Divider>
             {props.progressData.map((o) => (
-                <div key={o.slug} id={o.slug + "-progress"}>
-                    <Progress data={o} key={o.status} type="guild" />
-                    <Objective
-                        guild={props.guildData.key} progress={o} objective={props.guildData.raid_objectives && props.guildData.raid_objectives[o.slug]}
-                    />
-                    {o.status && o.status < 2 ?
-                        <Row type="flex" justify="center" style={{ marginTop: '16px', marginBottom: '32px' }}>
-                            <Col>
-                                <Row type="flex" justify="center" align="middle" style={{ fontSize: '24px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
-                                    {props.guildData.raid_progression[o.slug].summary}
-                                </Row>
-                                <Row type="flex" justify="center" style={{ marginTop: '16px' }} gutter={[16, 16]}>
-                                    {[...Array(props.guildData.raid_progression[o.slug].total_bosses)].map((x, i) =>
-                                        <Col key={i + 1}>
-                                            <img alt="" src={"/raid/" + o.slug + "/boss" + (i + 1) + ".webp"}
-                                                style={{ borderRadius: ".25rem", WebkitFilter: props.guildData.raid_progression[o.slug].heroic_bosses_killed >= i + 1 ? "none" : "grayscale(1)" }} />
-                                        </Col>
-                                    )}
-                                </Row>
-                            </Col>
-                        </Row>
-                        : ''}
-                </div>
+                ((o.status && o.status > 0) || (o.status && o.status < 0 && props.guildData.raid_objectives && props.guildData.raid_objectives[o.slug])) ?
+                    <div key={o.slug} id={o.slug + "-progress"}>
+                        <Progress data={o} key={o.status} type="guild" />
+                        <Objective
+                            guild={props.guildData.key} progress={o} objective={props.guildData.raid_objectives && props.guildData.raid_objectives[o.slug]}
+                        />
+                        {o.status && o.status < 2 ?
+                            <ProgressKills guild={props.guildData} progress={o.slug} />
+                            : ''}
+                    </div>
+                    : ''
             )
             )}
         </div>
@@ -89,16 +61,14 @@ const Guild = (props) => {
                 });
             setGuildData(gData);
 
-            const pData = await firebase.progress().get().then(
+            const pData = await firebase.progress().orderBy('status', 'desc').get().then(
                 (snapshot) => {
                     if (!snapshot.empty) {
                         return snapshot.docs;
                     }
                     else return;
                 });
-            setProgressData(pData.map(progress => progress.data()).sort(function (a, b) {
-                return b.status - a.status;
-            }));
+            setProgressData(pData.map(progress => progress.data()));
 
             setDidMount(true);
         }

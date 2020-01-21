@@ -7,30 +7,38 @@ import { FirebaseContext } from '../Firebase';
 const Home = () => {
     const firebase = useContext(FirebaseContext);
     const [progressData, setProgressData] = useState([])
+    const [activeData, setActiveData] = useState('')
 
     // Fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const progressResult = await firebase.progress().where('status', 'in', [1, 2]).get().then(
+            const progressResult = await firebase.progress().orderBy('status', 'desc').limit(2).get().then(
                 (snapshot) => {
                     if (!snapshot.empty) {
                         return snapshot.docs;
                     }
                     else return;
                 });
-            setProgressData(progressResult.map(progress => progress.data()).sort(function (a, b) {
-                return b.status - a.status;
-            }));
+            setProgressData(progressResult.map(progress => progress.data()));
+
+            const activeResults = await firebase.stats().doc('active').get().then(
+                (snapshot) => {
+                    if (!snapshot.empty) {
+                        return snapshot.data().value;
+                    }
+                    else return;
+                });
+            setActiveData(activeResults + '');
         }
 
-        fetchData() 
+        fetchData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <div className="Home" >
             <StartingBlock />
-            {progressData.map((o) => <Progress data={o} key={o.status} />)}
+            {progressData.map((o) => <Progress data={o} key={o.status} active={activeData}/>)}
         </div >
     );
 }

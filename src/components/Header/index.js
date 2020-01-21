@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import LeftMenu from '../LeftMenu';
-import RightMenu from '../RightMenu';
-import { Drawer, Button, Icon } from 'antd';
+// import LeftMenu from '../LeftMenu';
+// import RightMenu from '../RightMenu';
+// import { Drawer, Button, Icon } from 'antd';
 import * as Styled from './styled';
 import './Header.css';
 
@@ -29,14 +29,14 @@ class Header extends Component {
         return (
             <nav className="menu">
                 <Link to={ROUTES.HOME}><Styled.Logo /></Link>
-                <div className="menu__container">
+                {/* <div className="menu__container">
                     <div className="menu_left">
                         <LeftMenu mode="horizontal" />
                     </div>
                     <div className="menu_right">
                         <RightMenu mode="horizontal" />
-                    </div>
-                    <Button
+                    </div> */}
+                    {/* <Button
                         className="menu__mobile-button"
                         onClick={this.showDrawer}
                     >
@@ -51,8 +51,8 @@ class Header extends Component {
                     >
                         <LeftMenu mode="inline" />
                         <RightMenu mode="inline" />
-                    </Drawer>
-                </div>
+                    </Drawer> */}
+                {/* </div> */}
             </nav>
         );
     }

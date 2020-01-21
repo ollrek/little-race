@@ -82,6 +82,7 @@ class StartingBlockContent extends Component {
             // Check rio for guild existence if not found in our data
             if (!id) {
                 var faction = "";
+                var displayName = guild;
                 var url = new URL('https://raider.io/api/v1/guilds/profile');
                 url.search = new URLSearchParams({ region: region, realm: realm, name: guild });
 
@@ -91,6 +92,7 @@ class StartingBlockContent extends Component {
                         if (data.error) throw new Error(data.message);
                         else {
                             faction = data.faction;
+                            displayName = data.name;
                             return true;
                         };
                     })
@@ -104,7 +106,7 @@ class StartingBlockContent extends Component {
                     await this.props.firebase.guilds().add({
                         region: region,
                         realm: realm,
-                        name: guild,
+                        name: displayName,
                         slug: slug,
                         faction: faction
                     });

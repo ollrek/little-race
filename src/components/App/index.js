@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import { Layout } from 'antd';
+import { Layout, Tooltip } from 'antd';
 import './app.css';
 
 import HomePage from '../Home';
@@ -24,7 +24,7 @@ class App extends Component {
                         >
                             <HeaderCustom />
                         </Header>
-                        <Content>
+                        <Content style={{ background: 'white' }}>
                             <Switch>
                                 <Route exact path={ROUTES.HOME} component={HomePage} />
                                 <Route path={ROUTES.GUILD} component={GuildPage} />
@@ -38,6 +38,14 @@ class App extends Component {
                             <span style={{ whiteSpace: "nowrap" }}>
                                 {" <Ironforge Gospel>"}
                             </span>
+                            <div className="socialMedia" style={{ marginTop: '6px' }}>
+                                <Tooltip title="Ollrek#8130">
+                                    <img alt="" src={'/icons/discord.svg'} style={{ width: "24px" }} />
+                                </Tooltip>
+                                <Tooltip title="@ollrek">
+                                    <img alt="" src={'/icons/twitter.svg'} style={{ width: "24px", marginLeft: '6px'}} />
+                                </Tooltip>
+                            </div>
                         </Footer>
                     </Layout>
                 </div>

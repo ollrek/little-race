@@ -3,9 +3,9 @@ import { Row, Col, Statistic, Button, Tooltip } from 'antd';
 const { Countdown } = Statistic;
 
 const Progress = (props) => {
-    const { data } = props;
+    const { data, active } = props;
     var style = {
-        height: props.type && props.type === 'guild' ? '120px' : '230px',
+        height: props.type && props.type === 'guild' ? '120px' : '220px',
         marginTop: '10px',
         background: `top / cover no-repeat url(/raid/${data.slug}/banner.webp)`
     }
@@ -49,7 +49,7 @@ const Progress = (props) => {
                                             </Tooltip>
                                         </Col>
                                     </Row>
-                                ) : '4 guilds'}
+                                ) : data.status === 1 && active > 0 ? `${active} active guilds` : ''}
                             </Col>
                         </Row>
                     }

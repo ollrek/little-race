@@ -2,22 +2,26 @@ export const RAID_SIZE = {
     1: {
         name: 'extra small',
         min: 10,
-        max: 13
+        max: 13,
+        slug: 'xs'
     },
     2: {
         name: 'small',
         min: 14,
-        max: 18
+        max: 18,
+        slug: 's'
     }, 
     3: {
         name: 'medium',
         min: 19,
-        max: 24
+        max: 24,
+        slug: 'm'
     }, 
     4: {
         name: 'large',
         min: 25,
-        max: 30
+        max: 30,
+        slug: 'l'
     },
 };
 export const RAID_MODE = {
