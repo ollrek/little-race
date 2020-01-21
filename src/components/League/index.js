@@ -47,7 +47,7 @@ const LeagueContent = (props) => {
                         loading={guildsData.length === 0}
                         dataSource={guildsData}
                         style={{ margin: '0 6px 20px 6px' }}
-                        renderItem={(guild, i, pagination) => (
+                        renderItem={(guild, i) => (
                             <List.Item
                                 key={guild.name}
                             >
@@ -124,8 +124,12 @@ const League = (props) => {
                 }
 
                 setGuildsData(gData.sort((a, b) => {
-                    const aVal = a.raid_rankings[progress][RAID_MODE[('' + leagueData.key[0])]].world > 0 ? a.raid_rankings[progress][RAID_MODE[('' + leagueData.key[0])]].world : 100000
-                    const bVal = b.raid_rankings[progress][RAID_MODE[('' + leagueData.key[0])]].world > 0 ? b.raid_rankings[progress][RAID_MODE[('' + leagueData.key[0])]].world : 100000
+                    const aVal = a.raid_rankings
+                        && a.raid_rankings[progress]
+                        && a.raid_rankings[progress][RAID_MODE[('' + leagueData.key[0])]].world > 0 ? a.raid_rankings[progress][RAID_MODE[('' + leagueData.key[0])]].world : 100000
+                    const bVal = b.raid_rankings
+                        && b.raid_rankings[progress]
+                        && b.raid_rankings[progress][RAID_MODE[('' + leagueData.key[0])]].world > 0 ? b.raid_rankings[progress][RAID_MODE[('' + leagueData.key[0])]].world : 100000
                     return aVal - bVal
                 }));
             } else if (leagueData) {
