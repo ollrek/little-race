@@ -23,14 +23,14 @@ const Progress = (props) => {
                     {props.type && props.type === 'guild' ? ''
                         : <Row type="flex" justify="center" gutter={[0, 32]}>
                             <Col style={{ color: 'white', fontSize: '18px' }}>
-                                {data.status === 2 ? 'Upcoming' : 'Currently progressing'}
+                                {data.status === 2 ? 'Upcoming' : data.status === 1 ? 'Currently progressing' : 'Finished'}
                             </Col>
                         </Row>
                     }
                     {/* Progress text */}
                     <Row type="flex" justify="center" gutter={[0, 100]}>
                         <Col style={{ color: 'white', fontSize: '30px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
-                            <img style={{width: '100%'}} alt="" src={"/raid/" + data.slug + "/text.png"} />
+                            <img style={{ width: '100%' }} alt="" src={"/raid/" + data.slug + "/text.png"} />
                         </Col>
                     </Row>
                     {/* Footer */}
