@@ -13,6 +13,11 @@ class Firebase {
     constructor() {
         app.initializeApp(config);
         this.db = app.firestore();
+
+        this.db.enablePersistence()
+            .catch(function (err) {
+                console.log(err);
+            });
     }
 
     // *** User API ***

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import { Layout, Tooltip } from 'antd';
+import { Layout, Tooltip, Icon } from 'antd';
 import './app.css';
 
 import HomePage from '../Home';
@@ -43,7 +43,10 @@ class App extends Component {
                                     <img alt="" src={'/icons/discord.svg'} style={{ width: "24px" }} />
                                 </Tooltip>
                                 <Tooltip title="@ollrek">
-                                    <img alt="" src={'/icons/twitter.svg'} style={{ width: "24px", marginLeft: '6px'}} />
+                                    <img alt="" src={'/icons/twitter.svg'} style={{ width: "24px", marginLeft: '6px' }} />
+                                </Tooltip>
+                                <Tooltip title="Guild progress and leagues refreshes once a day for now !">
+                                    <Icon type="sync" style={{ marginLeft: '10px' }} />
                                 </Tooltip>
                             </div>
                         </Footer>

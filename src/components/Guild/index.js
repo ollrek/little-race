@@ -30,7 +30,10 @@ const GuildContent = (props) => {
                     <div key={o.slug} id={o.slug + "-progress"}>
                         <Progress data={o} key={o.status} type="guild" />
                         <Objective
-                            guild={props.guildData.key} progress={o} objective={props.guildData.raid_objectives && props.guildData.raid_objectives[o.slug]}
+                            guild={props.guildData.key}
+                            progress={o}
+                            objective={props.guildData.leagues && props.guildData.raid_objectives[o.slug]}
+                            league={props.guildData.leagues && props.guildData.leagues[o.slug]}
                         />
                         {o.status && o.status < 2 ?
                             <ProgressKills guild={props.guildData} progress={o.slug} />
@@ -52,7 +55,7 @@ const Guild = (props) => {
     // Fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const gData = await firebase.guilds().where('slug', '==', props.match.params.slug).get().then(
+            const gData = await firebase.guilds().where('slug', '==', props.match.params.slug).limit(1).get().then(
                 (snapshot) => {
                     if (!snapshot.empty) {
                         return { ...snapshot.docs[0].data(), ...{ key: snapshot.docs[0].id } };
@@ -61,7 +64,7 @@ const Guild = (props) => {
                 });
             setGuildData(gData);
 
-            const pData = await firebase.progress().orderBy('status', 'desc').get().then(
+            const pData = await firebase.progress().orderBy('status', 'desc').limit(10).get().then(
                 (snapshot) => {
                     if (!snapshot.empty) {
                         return snapshot.docs;

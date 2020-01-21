@@ -13,7 +13,7 @@ const Objective = (props) => {
     const firebase = useContext(FirebaseContext);
 
     const { slug, status } = props.progress;
-    const { guild } = props;
+    const { guild, league } = props;
 
     const [objective, setObjective] = useState(props.objective)
     // const [leagueData, setLeagueData] = useState({})
@@ -145,9 +145,9 @@ const Objective = (props) => {
                         {RAID_MODE[modeData] + ' - '}
                         {RAID_SIZE[sizeData].name + ' (' + RAID_SIZE[sizeData].min + '-' + RAID_SIZE[sizeData].max + ')'}
                         {' - ' + RAID_TIME[timeData]}
-                        {objective.league && objective.league.slug ?
+                        {league && league.slug ?
                             <Row type="flex" justify="center" >
-                                <Link to={`/league/${slug}/${objective.league.slug}`}>League {objective.league.name}</Link>
+                                <Link to={`/league/${slug}/${league.slug}`}>League {league.name}</Link>
                             </Row>
                             : ''}
                     </Col>

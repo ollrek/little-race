@@ -32,8 +32,8 @@ class Header extends Component {
                 {/* <div className="menu__container">
                     <div className="menu_left">
                         <LeftMenu mode="horizontal" />
-                    </div>
-                    <div className="menu_right">
+                    </div> */}
+                    {/* <div className="menu_right">
                         <RightMenu mode="horizontal" />
                     </div> */}
                     {/* <Button

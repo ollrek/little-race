@@ -90,7 +90,7 @@ const League = (props) => {
     // Fetch league data
     useEffect(() => {
         const fetchLeagueData = async () => {
-            const lData = await firebase.leagues(progress).where('slug', '==', objectiveSlug).get().then(
+            const lData = await firebase.leagues(progress).where('slug', '==', objectiveSlug).limit(1).get().then(
                 async (snapshot) => {
                     if (!snapshot.empty) {
                         return {

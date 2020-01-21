@@ -71,7 +71,7 @@ class StartingBlockContent extends Component {
             const slug = getSlug(region + ' ' + realm + ' ' + guild + ' ');
 
             // Check if exists in our DB, if yes redirect
-            var id = await this.props.firebase.guilds().where('slug', '==', slug).get().then(
+            var id = await this.props.firebase.guilds().where('slug', '==', slug).limit(1).get().then(
                 (snapshot) => {
                     if (!snapshot.empty) {
                         return snapshot.docs[0].data().slug;
