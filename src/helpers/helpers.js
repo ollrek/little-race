@@ -39,40 +39,45 @@ const ProgressKills = (props) => {
 
     return (
         <Row type="flex" justify="center" style={containerStyle}>
-            <Col>
-                {type && (type === 's') ?
-                    <Row type="flex" justify="center" align="middle" style={{ textTransform: 'uppercase' }} gutter={[6, 6]}>
-                        <Col>
-                            {`${guild.raid_progression[progress][RAID_MODE[guild.raid_objectives[progress].modeData] + '_bosses_killed']}/${guild.raid_progression[progress].total_bosses} ${RAID_MODE[guild.raid_objectives[progress].modeData].charAt(0)}`}
-                        </Col>
-                        <Col>
-                            <Tooltip title={`
+            {guild.raid_progression && guild.raid_progression[progress] && guild.raid_objectives && guild.raid_objectives[progress] ?
+                <Col>
+                    {type && (type === 's') ?
+                        <Row type="flex" justify="center" align="middle" style={{ textTransform: 'uppercase' }} gutter={[6, 6]}>
+                            <Col>
+                                {`${guild.raid_progression[progress][RAID_MODE[guild.raid_objectives[progress].modeData] + '_bosses_killed']}/${guild.raid_progression[progress].total_bosses} ${RAID_MODE[guild.raid_objectives[progress].modeData].charAt(0)}`}
+                            </Col>
+                            <Col>
+                                <Tooltip title={`
                                     ${guild.raid_rankings[progress][RAID_MODE[guild.raid_objectives[progress].modeData]].world ? guild.raid_rankings[progress][RAID_MODE[guild.raid_objectives[progress].modeData]].world : 'Unranked'} ${[RAID_MODE[guild.raid_objectives[progress].modeData]]} world`}
-                                placement="topRight"
-                            >
-                                <Icon type="question-circle" theme="filled" />
-                            </Tooltip>
-                        </Col>
+                                    placement="topRight"
+                                >
+                                    <Icon type="question-circle" theme="filled" />
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                        :
+                        <Row type="flex" justify="center" align="middle" style={{ fontSize: '24px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
+                            {`${guild.raid_progression[progress][RAID_MODE[guild.raid_objectives[progress].modeData] + '_bosses_killed']}/${guild.raid_progression[progress].total_bosses} ${RAID_MODE[guild.raid_objectives[progress].modeData]}`}
+                        </Row>
+                    }
+                    <Row type="flex" justify="center" style={iconsContainerStyle} gutter={[16, 16]}>
+                        {[...Array(guild.raid_progression[progress].total_bosses)].map((x, i) => {
+                            return (<Col {...iconsContainerCol} key={i + 1}>
+                                <img alt="" src={"/raid/" + progress + "/boss" + (i + 1) + ".webp"}
+                                    style={
+                                        type === 's' ? { ...{ width: '30px' }, ...{ borderRadius: ".25rem", WebkitFilter: guild.raid_progression[progress][RAID_MODE[guild.raid_objectives[progress].modeData] + '_bosses_killed'] >= i + 1 ? "none" : "grayscale(1)" } }
+                                            :
+                                            { borderRadius: ".25rem", WebkitFilter: guild.raid_progression[progress][RAID_MODE[guild.raid_objectives[progress].modeData] + '_bosses_killed'] >= i + 1 ? "none" : "grayscale(1)" }}
+                                />
+                            </Col>
+                            )
+                        })}
                     </Row>
-                    :
-                    <Row type="flex" justify="center" align="middle" style={{ fontSize: '24px', fontWeight: 'bolder', textTransform: 'uppercase' }}>
-                        {`${guild.raid_progression[progress][RAID_MODE[guild.raid_objectives[progress].modeData] + '_bosses_killed']}/${guild.raid_progression[progress].total_bosses} ${RAID_MODE[guild.raid_objectives[progress].modeData]}`}
-                    </Row>
-                }
-                <Row type="flex" justify="center" style={iconsContainerStyle} gutter={[16, 16]}>
-                    {[...Array(guild.raid_progression[progress].total_bosses)].map((x, i) => {
-                        return (<Col {...iconsContainerCol} key={i + 1}>
-                            <img alt="" src={"/raid/" + progress + "/boss" + (i + 1) + ".webp"}
-                                style={
-                                    type === 's' ? { ...{ width: '30px' }, ...{ borderRadius: ".25rem", WebkitFilter: guild.raid_progression[progress][RAID_MODE[guild.raid_objectives[progress].modeData] + '_bosses_killed'] >= i + 1 ? "none" : "grayscale(1)" } }
-                                        :
-                                        { borderRadius: ".25rem", WebkitFilter: guild.raid_progression[progress][RAID_MODE[guild.raid_objectives[progress].modeData] + '_bosses_killed'] >= i + 1 ? "none" : "grayscale(1)" }}
-                            />
-                        </Col>
-                        )
-                    })}
-                </Row>
-            </Col>
+                </Col>
+                :
+                <Tooltip title="Guild progress and leagues refreshes once a day for now !">
+                    <Icon type="sync" />
+                </Tooltip>}
         </Row >
     )
 }
